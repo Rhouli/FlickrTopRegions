@@ -34,7 +34,7 @@
     }
     
     [region addPhotographersObject:photographer];
-    region.photographersNum = [NSNumber numberWithInt:[region.photographers count]];
+    region.photographersNum = [NSNumber numberWithInteger:[region.photographers count]];
 
     return region;
 }
