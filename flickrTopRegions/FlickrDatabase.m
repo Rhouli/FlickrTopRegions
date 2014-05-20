@@ -105,9 +105,18 @@
                             failure = NO;
                             [self.managedObjectContext performBlock:^{
                                 // load up the Core Data database
+                                NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Photo"];
+                                NSArray* uniqueKeys = [photos valueForKey:FLICKR_PHOTO_ID];
+                                request.predicate = [NSPredicate predicateWithFormat:@"unique IN %@", uniqueKeys];
+                                NSArray *results    = [self.managedObjectContext executeFetchRequest:request
+                                                                                               error:nil];
+                                NSMutableArray *uniqueIDs = [results valueForKey:@"unique"];
+
                                 for (NSDictionary *photoDictionary in photos) {
-                                    [Photo photoWithFlickrInfo:photoDictionary
-                                        inManagedObjectContext:self.managedObjectContext];
+                                    NSString *unique = [photoDictionary valueForKeyPath:FLICKR_PHOTO_ID];
+                                    if (![uniqueIDs containsObject:unique])
+                                        [Photo newPhotoWithFlickrInfo:photoDictionary
+                                           inManagedObjectContext:self.managedObjectContext];
                                 }
                                 if (completionHandler) dispatch_async(dispatch_get_main_queue(), ^{
                                     completionHandler(YES);

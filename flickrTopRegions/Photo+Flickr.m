@@ -14,43 +14,29 @@
 
 @implementation Photo (Flickr)
 
-+ (Photo *)photoWithFlickrInfo:(NSDictionary *)photoDictionary
++ (Photo *)newPhotoWithFlickrInfo:(NSDictionary *)photoDictionary
         inManagedObjectContext:(NSManagedObjectContext *)context {
     Photo *photo = nil;
-    
     NSString *unique = [photoDictionary valueForKeyPath:FLICKR_PHOTO_ID];
     
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Photo"];
-    request.predicate = [NSPredicate predicateWithFormat:@"unique = %@", unique];
+    photo = [NSEntityDescription insertNewObjectForEntityForName:@"Photo"
+                                          inManagedObjectContext:context];
+    photo.unique = unique;
+    photo.title = [photoDictionary valueForKeyPath:FLICKR_PHOTO_TITLE];
+    if(photo.title == NULL || [photo.title isEqualToString:@""])
+        photo.title = @"Unkown";
+    photo.subtitle = [photoDictionary valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+    photo.imageURL = [[FlickrFetcher URLforPhoto:photoDictionary
+                                          format:FlickrPhotoFormatLarge] absoluteString];
     
-    NSError *error;
-    NSArray *matches = [context executeFetchRequest:request error:&error];
-    
-    if (error || !matches || ([matches count] > 1)) {
-        NSLog(@"Error in Photo+Flickr: matches:%@ error:%@", matches, error);
-    } else if (![matches count]) {
-        photo = [NSEntityDescription insertNewObjectForEntityForName:@"Photo"
-                                              inManagedObjectContext:context];
-        photo.unique = unique;
-        photo.title = [photoDictionary valueForKeyPath:FLICKR_PHOTO_TITLE];
-        if(photo.title == NULL || [photo.title isEqualToString:@""])
-            photo.title = @"Unkown";
-        photo.subtitle = [photoDictionary valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
-        photo.imageURL = [[FlickrFetcher URLforPhoto:photoDictionary
-                                              format:FlickrPhotoFormatLarge] absoluteString];
-        
-        photo.thumbnailURL = [[FlickrFetcher URLforPhoto:photoDictionary
+    photo.thumbnailURL = [[FlickrFetcher URLforPhoto:photoDictionary
                                               format:FlickrPhotoFormatSquare] absoluteString];
-
-        NSString *photographerName = [photoDictionary valueForKeyPath:FLICKR_PHOTO_OWNER];
-        photo.whoTook = [Photographer photographerWithName:photographerName
-                                    inManagedObjectContext:context];
-        [self fetchRegionInfo:[photoDictionary valueForKeyPath:FLICKR_PHOTO_PLACE_ID]
-                    withPhoto:photo inManagedObjectContext:context];
-    } else {
-        photo = [matches firstObject];
-        
-    }
+    
+    NSString *photographerName = [photoDictionary valueForKeyPath:FLICKR_PHOTO_OWNER];
+    photo.whoTook = [Photographer photographerWithName:photographerName
+                                inManagedObjectContext:context];
+    [self fetchRegionInfo:[photoDictionary valueForKeyPath:FLICKR_PHOTO_PLACE_ID]
+                withPhoto:photo inManagedObjectContext:context];
 
     return photo;
 }

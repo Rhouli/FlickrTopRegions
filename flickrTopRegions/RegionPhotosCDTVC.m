@@ -79,9 +79,10 @@
 
 - (void)prepareImageViewController:(ImageViewController *)ivc
                     toDisplayPhoto:(Photo *)photo {
-    ivc.imageURL = [NSURL URLWithString:photo.imageURL];
     
     ivc.title = photo.title;
+    ivc.uniqueID = photo.unique;
+    ivc.imageURL = [NSURL URLWithString:photo.imageURL];
     [DatabaseHelper justViewed:photo];
 }
 

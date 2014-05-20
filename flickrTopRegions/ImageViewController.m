@@ -59,7 +59,8 @@
     // self.scrollView could be nil on the next line if outlet-setting has not happened yet
     self.scrollView.contentSize = self.image ? self.image.size : CGSizeZero;
 
-    [self.spinner stopAnimating];
+    //if(self.animating)
+        [self.spinner stopAnimating];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -130,16 +131,40 @@
 
 - (void)setImageURL:(NSURL *)imageURL {
     _imageURL = imageURL;
-    //    self.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.imageURL]]; // blocks main queue!
-    [self startDownloadingImage];
+    [self getCachedImage];
 }
 
-- (void)startDownloadingImage {
+- (void) cacheImage {
+    NSArray *cach = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cache = [cach objectAtIndex:0];
+    NSString* filePath = [cache stringByAppendingPathComponent:self.uniqueID];
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:filePath])
+        [self startDownloadingImage:filePath];
+}
+
+- (void) getCachedImage {
+    NSArray *cach = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cache = [cach objectAtIndex:0];
+    NSString *filePath = [cache stringByAppendingPathComponent:self.uniqueID];
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+        self.animating = NO;
+        [self.spinner hidesWhenStopped];
+        self.image = [UIImage imageWithContentsOfFile:filePath];
+    } else {
+        [self cacheImage];
+        self.image = [UIImage imageWithContentsOfFile:filePath];
+    }
+}
+
+- (void)startDownloadingImage:(NSString*)filePath {
     self.image = nil;
 
     if (self.imageURL)
     {
         [self.spinner startAnimating];
+        self.animating = YES;
 
         NSURLRequest *request = [NSURLRequest requestWithURL:self.imageURL];
         
@@ -159,7 +184,16 @@
                         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:localfile]];
                         // but calling "self.image =" is definitely not an exception to that!
                         // so we must dispatch this back to the main queue
-                        dispatch_async(dispatch_get_main_queue(), ^{ self.image = image; });
+                        // add file to cache storage
+                        if([[self.imageURL absoluteString] rangeOfString: @".png" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES];
+                        } else if([[self.imageURL absoluteString] rangeOfString: @".jpg" options:NSCaseInsensitiveSearch].location != NSNotFound ||
+                                  [[self.imageURL absoluteString] rangeOfString: @".jpeg" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            [UIImageJPEGRepresentation(image, 100) writeToFile:filePath atomically:YES];
+                        }
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.image = image;
+                        });
                     }
                 }
         }];
