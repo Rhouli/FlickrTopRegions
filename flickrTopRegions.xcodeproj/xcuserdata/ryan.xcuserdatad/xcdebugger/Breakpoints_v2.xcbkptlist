@@ -9,14 +9,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "flickrTopRegions/DefaultRegionsCDTVC.m"
-            timestampString = "422259129.444914"
+            filePath = "flickrTopRegions/RegionPhotosCDTVC.m"
+            timestampString = "422318304.375952"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "13"
-            endingLineNumber = "13"
-            landmarkName = "@implementation DefaultRegionsCDTVC"
-            landmarkType = "3">
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "-setupFetchedResultsController"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

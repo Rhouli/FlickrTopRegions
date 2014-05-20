@@ -40,6 +40,7 @@
 
     return photo;
 }
+
 /*
 + (void) fetchRegionInfo:(NSString*)placeID withPhoto:(Photo *)photo inManagedObjectContext:(NSManagedObjectContext *)context{
     NSURL *url = [FlickrFetcher URLforInformationAboutPlace:(id)placeID];
@@ -56,33 +57,34 @@
                                                                                     options:0
                                                                                       error:&error];
                 // create a new context
-                FlickrDatabase *flickrdb = [FlickrDatabase sharedDefaultFlickrDatabase];
-                NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
-                [context setPersistentStoreCoordinator:flickrdb.managedObjectContext.persistentStoreCoordinator];
+                //FlickrDatabase *flickrdb = [FlickrDatabase sharedDefaultFlickrDatabase];
+                NSManagedObjectContext *newContext = [[NSManagedObjectContext alloc] init];
+
+                [newContext setPersistentStoreCoordinator:[context persistentStoreCoordinator]];
                 
                 // Fetch and update photo thumbnail data
                 NSError *errorC = nil;
                 Photo* newPhoto = nil;
                 NSFetchRequest * request = [[NSFetchRequest alloc] init];
-                [request setEntity:[NSEntityDescription entityForName:@"Photo" inManagedObjectContext:context]];
+                [request setEntity:[NSEntityDescription entityForName:@"Photo" inManagedObjectContext:newContext]];
                 [request setPredicate:[NSPredicate predicateWithFormat:@"unique=%@",photo.unique]];
                 
                 NSString *regionName = [FlickrFetcher extractRegionNameFromPlaceInformation:place];
                 
-                newPhoto.whereTaken = [Region regionWithName:regionName withPhotographer:photo.whoTook inManagedObjectContext:context];
+                newPhoto.whereTaken = [Region regionWithName:regionName withPhotographer:photo.whoTook inManagedObjectContext:newContext];
                 
                 // Save to store
                 errorC = nil;
-                if (![context save:nil]) {
+                
+                if (![newContext save:nil]) {
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
                 });
             }
         }
     });
-}*/
-
+}
+*/
 
 + (void) fetchRegionInfo:(NSString*)placeID withPhoto:(Photo *)photo inManagedObjectContext:(NSManagedObjectContext *)context{
     NSURL *url = [FlickrFetcher URLforInformationAboutPlace:(id)placeID];

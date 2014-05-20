@@ -11,7 +11,7 @@
 
 @interface DatabaseHelper : NSObject
 
-+ (void)fetchThumbnailData:(Photo*)photo forCell:(UITableViewCell*)cell withIndexPath:(NSIndexPath *)indexPath;
++ (void)fetchThumbnailData:(Photo*)photo forCell:(UITableViewCell*)cell withIndexPath:(NSIndexPath *)indexPath withContext:(NSManagedObjectContext*)context;
 + (void)justViewed:(Photo*)photo;
 
 @end

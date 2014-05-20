@@ -51,7 +51,7 @@
     cell.detailTextLabel.text = photo.subtitle;
     
     if (!photo.thumbnailData)
-        [DatabaseHelper fetchThumbnailData:photo forCell:cell withIndexPath:indexPath];
+        [DatabaseHelper fetchThumbnailData:photo forCell:cell withIndexPath:indexPath withContext:self.managedObjectContext];
     else
         cell.imageView.image = [UIImage imageWithData:photo.thumbnailData];
 

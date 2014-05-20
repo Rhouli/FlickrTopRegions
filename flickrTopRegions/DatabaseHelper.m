@@ -11,8 +11,30 @@
 #import "FlickrDatabase.h"
 
 @implementation DatabaseHelper
+/*
++ (void)fetchThumbnailData:(Photo*)photo forCell:(UITableViewCell*)cell withIndexPath:(NSIndexPath *)indexPath withContext:(NSManagedObjectContext*)context {
+    NSURL *url = [NSURL URLWithString:photo.thumbnailURL];
+    dispatch_queue_t fetchQueue = dispatch_queue_create("FlickrDatabase fetch", NULL);
+    dispatch_async(fetchQueue, ^{
+        if (url) {
+            UIApplication *application = [UIApplication sharedApplication];
+            application.networkActivityIndicatorVisible = YES;
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            application.networkActivityIndicatorVisible = NO;
+            if (data) {
+                // Fetch and update photo thumbnail data
+                dispatch_async(dispatch_get_main_queue(), ^{
+                   // photo.thumbnailData = data;
+                    cell.imageView.image = [UIImage imageWithData:data];
+                    [cell setNeedsLayout];
+                });
+            }
+        }
+    });
+}
+*/
 
-+ (void)fetchThumbnailData:(Photo*)photo forCell:(UITableViewCell*)cell withIndexPath:(NSIndexPath *)indexPath {
++ (void)fetchThumbnailData:(Photo*)photo forCell:(UITableViewCell*)cell withIndexPath:(NSIndexPath *)indexPath withContext:(NSManagedObjectContext*)mainContext {
     NSURL *url = [NSURL URLWithString:photo.thumbnailURL];
     dispatch_queue_t fetchQueue = dispatch_queue_create("FlickrDatabase fetch", NULL);
     dispatch_async(fetchQueue, ^{
@@ -23,9 +45,8 @@
             application.networkActivityIndicatorVisible = NO;
             if (data) {
                 // create a new context
-                FlickrDatabase *flickrdb = [FlickrDatabase sharedDefaultFlickrDatabase];
                 NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
-                [context setPersistentStoreCoordinator:flickrdb.managedObjectContext.persistentStoreCoordinator];
+                [context setPersistentStoreCoordinator:mainContext.persistentStoreCoordinator];
                 
                 // Fetch and update photo thumbnail data
                 NSError *error = nil;
