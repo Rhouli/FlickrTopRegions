@@ -11,14 +11,6 @@
 
 @implementation DefaultRecentlyViewedCDTVC
 
-- (IBAction)refresh
-{
-    [self.refreshControl beginRefreshing];
-    [[FlickrDatabase sharedDefaultFlickrDatabase] fetchWithCompletionHandler:^(BOOL success) {
-        [self.refreshControl endRefreshing];
-    }];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
