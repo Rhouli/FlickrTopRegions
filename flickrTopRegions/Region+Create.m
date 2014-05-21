@@ -11,8 +11,7 @@
 @implementation Region (Create)
 
 + (Region *)regionWithName:(NSString *)name withPhotographer:(Photographer *)photographer
-                inManagedObjectContext:(NSManagedObjectContext *)context
-{
+                inManagedObjectContext:(NSManagedObjectContext *)context {
     Region *region = nil;
     
     if ([name length]) {

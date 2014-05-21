@@ -29,7 +29,7 @@
 {
     if (self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Photo"];
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY whereTaken.name LIKE %@", self.regionName];
+        request.predicate = [NSPredicate predicateWithFormat:@"whereTaken.name = %@", self.regionName];
         
         NSSortDescriptor *name = [NSSortDescriptor sortDescriptorWithKey:@"title"
                                                                ascending:YES
@@ -55,7 +55,7 @@
     if (!photo.thumbnailData){
         [DatabaseHelper fetchThumbnailData:photo forCell:cell withIndexPath:indexPath withContext:self.managedObjectContext];
     } else {
-            cell.imageView.image = [UIImage imageWithData:photo.thumbnailData];
+        cell.imageView.image = [UIImage imageWithData:photo.thumbnailData];
     }
 
     return cell;

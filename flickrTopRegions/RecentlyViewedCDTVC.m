@@ -16,14 +16,12 @@
 
 @implementation RecentlyViewedCDTVC
 
-- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-{
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     _managedObjectContext = managedObjectContext;
     [self setupFetchedResultsController];
 }
 
-- (void)setupFetchedResultsController
-{
+- (void)setupFetchedResultsController {
     if (self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Photo"];
         request.predicate = [NSPredicate predicateWithFormat:@"lastViewed != nil"];
@@ -42,8 +40,7 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Recent Photo"];
     
     Photo *photo = [self.fetchedResultsController objectAtIndexPath:indexPath];
@@ -61,8 +58,7 @@
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     id detailVC = [self.splitViewController.viewControllers lastObject];
     if ([detailVC isKindOfClass:[UINavigationController class]]) {
         detailVC = [((UINavigationController *)detailVC).viewControllers firstObject];

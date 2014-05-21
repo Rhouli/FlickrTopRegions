@@ -11,8 +11,7 @@
 @implementation Photographer (Create)
 
 + (Photographer *)photographerWithName:(NSString *)name
-                inManagedObjectContext:(NSManagedObjectContext *)context
-{
+                inManagedObjectContext:(NSManagedObjectContext *)context {
     Photographer *photographer = nil;
     
     if ([name length]) {

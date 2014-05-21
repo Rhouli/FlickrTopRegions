@@ -34,11 +34,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="kdR-6r-V2x" firstAttribute="centerY" secondItem="jQ9-zX-yRe" secondAttribute="centerY" id="0oX-7s-2rb"/>
                             <constraint firstAttribute="bottom" secondItem="jQ9-zX-yRe" secondAttribute="bottom" id="0yW-8p-4GD"/>
-                            <constraint firstItem="jQ9-zX-yRe" firstAttribute="centerY" secondItem="kdR-6r-V2x" secondAttribute="centerY" id="5iE-BM-yhq"/>
-                            <constraint firstItem="jQ9-zX-yRe" firstAttribute="centerX" secondItem="kdR-6r-V2x" secondAttribute="centerX" id="9mT-gw-YP7"/>
                             <constraint firstItem="jQ9-zX-yRe" firstAttribute="top" secondItem="nfW-Ko-lbW" secondAttribute="top" id="c4R-vl-wC7"/>
                             <constraint firstItem="jQ9-zX-yRe" firstAttribute="leading" secondItem="nfW-Ko-lbW" secondAttribute="leading" id="d2k-IU-5ao"/>
+                            <constraint firstItem="kdR-6r-V2x" firstAttribute="centerX" secondItem="jQ9-zX-yRe" secondAttribute="centerX" id="eEc-Qo-asH"/>
                             <constraint firstAttribute="trailing" secondItem="jQ9-zX-yRe" secondAttribute="trailing" id="yg1-6m-xXq"/>
                         </constraints>
                     </view>

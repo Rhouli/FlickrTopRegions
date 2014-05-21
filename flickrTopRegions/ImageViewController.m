@@ -31,6 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.scrollView addSubview:self.imageView];
+    [self getCachedImage];
 }
 
 #pragma mark - Properties
@@ -53,14 +54,13 @@
 - (void)setImage:(UIImage *)image {
     self.imageView.image = image; // does not change the frame of the UIImageView
     self.imageView.contentMode = UIViewContentModeScaleAspectFit; // You could also try UIViewContentModeCenter
-    [self.imageView sizeToFit];   // update the frame of the UIImageView
+   // [self.imageView sizeToFit];   // update the frame of the UIImageView
     [self resizeImageToFitScreen];
     
     // self.scrollView could be nil on the next line if outlet-setting has not happened yet
     self.scrollView.contentSize = self.image ? self.image.size : CGSizeZero;
 
-    if(self.animating)
-        [self.spinner stopAnimating];
+    [self.spinner stopAnimating];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -131,7 +131,7 @@
 
 - (void)setImageURL:(NSURL *)imageURL {
     _imageURL = imageURL;
-    [self getCachedImage];
+   [self getCachedImage];
 }
 
 - (void) cacheImage {
@@ -149,10 +149,10 @@
     NSString *filePath = [cache stringByAppendingPathComponent:self.uniqueID];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
-        self.animating = NO;
         self.image = [UIImage imageWithContentsOfFile:filePath];
     } else {
         [self cacheImage];
+        self.spinner.hidden = NO;
         self.image = [UIImage imageWithContentsOfFile:filePath];
     }
 }
@@ -161,9 +161,6 @@
     self.image = nil;
 
     if (self.imageURL) {
-        self.animating = YES;
-        [self.spinner startAnimating];
-
         NSURLRequest *request = [NSURLRequest requestWithURL:self.imageURL];
         
         // another configuration option is backgroundSessionConfiguration (multitasking API required though)

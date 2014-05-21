@@ -98,13 +98,13 @@
             if (jsonResults) {
                 NSError *error;
                 NSDictionary *place = [NSJSONSerialization JSONObjectWithData:jsonResults
-                                                                                    options:0
-                                                                                      error:&error];
+                                                                      options:0
+                                                                        error:&error];
                 NSString *regionName = [FlickrFetcher extractRegionNameFromPlaceInformation:place];
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
+                [context performBlock:^{
                     photo.whereTaken = [Region regionWithName:regionName withPhotographer:photo.whoTook inManagedObjectContext:context];
-                });
+                }];
             }
         }
     });

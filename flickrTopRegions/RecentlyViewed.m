@@ -1,20 +1,18 @@
 //
-//  Photographer.m
+//  RecentlyViewed.m
 //  flickrTopRegions
 //
 //  Created by Ryan on 5/20/14.
 //  Copyright (c) 2014 Ryan Houlihan. All rights reserved.
 //
 
-#import "Photographer.h"
+#import "RecentlyViewed.h"
 #import "Photo.h"
-#import "Region.h"
 
 
-@implementation Photographer
+@implementation RecentlyViewed
 
-@dynamic name;
+@dynamic unique;
 @dynamic photos;
-@dynamic places;
 
 @end
