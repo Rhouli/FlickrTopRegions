@@ -59,8 +59,9 @@
     
     // self.scrollView could be nil on the next line if outlet-setting has not happened yet
     self.scrollView.contentSize = self.image ? self.image.size : CGSizeZero;
-
-    [self.spinner stopAnimating];
+    
+   // if (self.animating)
+        [self.spinner stopAnimating];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -131,7 +132,8 @@
 
 - (void)setImageURL:(NSURL *)imageURL {
     _imageURL = imageURL;
-   [self getCachedImage];
+    if (!IS_PHONE)
+        [self getCachedImage];
 }
 
 - (void) cacheImage {
@@ -149,17 +151,18 @@
     NSString *filePath = [cache stringByAppendingPathComponent:self.uniqueID];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+        self.animating = NO;
         self.image = [UIImage imageWithContentsOfFile:filePath];
     } else {
         [self cacheImage];
-        self.spinner.hidden = NO;
         self.image = [UIImage imageWithContentsOfFile:filePath];
     }
 }
 
 - (void)startDownloadingImage:(NSString*)filePath {
     self.image = nil;
-
+    self.animating = YES;
+    [self.spinner performSelectorOnMainThread:@selector(startAnimating) withObject:nil waitUntilDone:NO];
     if (self.imageURL) {
         NSURLRequest *request = [NSURLRequest requestWithURL:self.imageURL];
         

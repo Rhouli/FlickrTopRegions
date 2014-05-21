@@ -71,7 +71,6 @@
     });
 }
 
-
 + (void)justViewed:(Photo*)photo {
     dispatch_queue_t fetchQueue = dispatch_queue_create("update lastViewed attribute", NULL);
     
